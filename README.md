@@ -23,7 +23,7 @@ Detailed documentation is available in the `wiki/` directory:
 
 - [**Getting Started**](wiki/Getting-Started.md) - Installation and setup
 - [**Configuration**](wiki/Configuration.md) - customizable settings & templates
-- [**Deployment Guide**](wiki/Deployment.md) - Docker & Cloud hosting
+- [**User Guide**](wiki/User-Guide.md) - How to use the app
 - [**API Reference**](wiki/API-Reference.md) - Endpoints documentation
 - [**Best Practices**](wiki/Best-Practices.md) - Email deliverability tips
 - [**Troubleshooting**](wiki/Troubleshooting.md) - Common fixes
