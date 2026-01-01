@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Automation Platform - Automated Outreach System</title>
+    <meta name="description"
+        content="Automated client outreach platform with AI-powered email generation and bulk management">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
+        data-id="somnathdash" data-description="Support me on Buy me a coffee!"
+        data-message="If you like the app, support me, Buy me a coffee☕ " data-color="#40DCA5" data-position="Right"
+        data-x_margin="18" data-y_margin="18"></script>
+</head>
+
+<body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Main Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1 class="app-title">
+                    <img src="logo.png" alt="Logo" class="app-logo"
+                        style="width: 40px; height: 40px; margin-right: 12px;">
+                    Client Automation Platform
+                </h1>
+                <div class="header-actions">
+                    <button id="refreshBtn" class="btn-icon" title="Refresh Data">
+                        <span>🔄</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="tab-navigation">
+            <button class="tab-btn active" data-tab="dashboard">
+                <span class="tab-icon">📊</span>
+                Dashboard
+            </button>
+            <button class="tab-btn" data-tab="clients">
+                <span class="tab-icon">👥</span>
+                Clients
+            </button>
+            <button class="tab-btn" data-tab="automate">
+                <span class="tab-icon">⚡</span>
+                Automate
+            </button>
+            <button class="tab-btn" data-tab="settings">
+                <span class="tab-icon">⚙️</span>
+                Settings
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Tab -->
+            <section id="dashboard" class="tab-content active">
+                <div class="content-header">
+                    <h2>Dashboard Overview</h2>
+                    <p class="subtitle">Monitor your email automation performance</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Total Clients</p>
+                            <h3 class="stat-value" id="statTotalClients">0</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📧</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Emails Sent</p>
+                            <h3 class="stat-value" id="statEmailsSent">0</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Pending</p>
+                            <h3 class="stat-value" id="statUnsent">0</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-info">
+                    <div class="info-card">
+                        <h3>Quick Start Guide</h3>
+                        <ol>
+                            <li>Configure your settings (API keys, SMTP, etc.)</li>
+                            <li>Go to Automate tab and run the 4-step workflow</li>
+                            <li>Review and manage clients in the Clients tab</li>
+                            <li>Track results in this dashboard</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Clients Tab -->
+            <section id="clients" class="tab-content">
+                <div class="content-header">
+                    <h2>Client Management</h2>
+                    <p class="subtitle">View, filter, and manage your clients</p>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <label for="filterStatus">Status:</label>
+                        <select id="filterStatus" class="filter-select">
+                            <option value="all">All</option>
+                            <option value="sent">Sent</option>
+                            <option value="unsent">Unsent</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterNiche">Niche:</label>
+                        <select id="filterNiche" class="filter-select">
+                            <option value="all">All</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterPlatform">Platform:</label>
+                        <select id="filterPlatform" class="filter-select">
+                            <option value="all">All</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="sortBy">Sort By:</label>
+                        <select id="sortBy" class="filter-select">
+                            <option value="date-desc">Date (Newest)</option>
+                            <option value="date-asc">Date (Oldest)</option>
+                            <option value="email-asc">Email (A-Z)</option>
+                            <option value="email-desc">Email (Z-A)</option>
+                            <option value="niche-asc">Niche (A-Z)</option>
+                        </select>
+                    </div>
+                    <button id="applyFilters" class="btn-primary">Apply Filters</button>
+                </div>
+
+                <!-- Bulk Actions Bar -->
+                <div class="bulk-actions-bar" id="bulkActionsBar" style="display: none;">
+                    <div class="bulk-info">
+                        <span id="selectedCount">0</span> clients selected
+                    </div>
+                    <div class="bulk-buttons">
+                        <button id="bulkGenerate" class="btn-primary">✨ Generate Emails</button>
+                        <button id="bulkSend" class="btn-success">📧 Send Emails</button>
+                        <button id="bulkDelete" class="btn-secondary"
+                            style="background: var(--accent-error); color: white;">🗑️ Delete</button>
+                    </div>
+                </div>
+
+                <!-- Clients Table -->
+                <div class="table-container">
+                    <table class="clients-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">
+                                    <input type="checkbox" id="selectAll" title="Select all">
+                                </th>
+                                <th>Email</th>
+                                <th>Niche</th>
+                                <th>Platform</th>
+                                <th>Status</th>
+                                <th>Found Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clientsTableBody">
+                            <tr>
+                                <td colspan="6" class="empty-state">No clients found. Run automation to get started.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Automate Tab -->
+            <section id="automate" class="tab-content">
+                <div class="content-header">
+                    <h2>Automation Workflow</h2>
+                    <p class="subtitle">Complete the 4-step process to automate client outreach</p>
+                </div>
+
+                <!-- Progress Tracker -->
+                <div class="progress-tracker">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <p class="step-label">Web Search</p>
+                    </div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <p class="step-label">Generate Emails</p>
+                    </div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <p class="step-label">Confirm</p>
+                    </div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step" data-step="4">
+                        <div class="step-number">4</div>
+                        <p class="step-label">Send Emails</p>
+                    </div>
+                </div>
+
+                <!-- Automation Steps -->
+                <div class="automation-container">
+                    <!-- Step 1: Web Search -->
+                    <div class="automation-step" id="step1Container">
+                        <h3>Step 1: Web Search</h3>
+                        <form id="step1Form" class="automation-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="searchNiche">Niche <span class="required">*</span></label>
+                                    <input type="text" id="searchNiche" placeholder="e.g., restaurant" required>
+                                    <small>Single value only (no commas)</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="searchCountry">Country <span class="required">*</span></label>
+                                    <input type="text" id="searchCountry" placeholder="e.g., us" required>
+                                    <small>Country code (us, uk, in, etc.)</small>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="searchEmailDomain">Email Domain <span class="required">*</span></label>
+                                    <input type="text" id="searchEmailDomain" placeholder="gmail.com" required>
+                                    <small>Single domain only (no @ symbol or commas)</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="searchPlatforms">Sites/Platforms <span class="required">*</span></label>
+                                    <input type="text" id="searchPlatforms" placeholder="instagram.com,facebook.com"
+                                        required>
+                                    <small>Comma-separated allowed</small>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary btn-large">
+                                🔍 Start Search
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Step 2: Generate Emails -->
+                    <div class="automation-step" id="step2Container" style="display: none;">
+                        <h3>Step 2: Generate Emails</h3>
+                        <p id="step2Info" class="step-info">Ready to generate personalized emails using Gemini AI.</p>
+                        <button id="step2Btn" class="btn-primary btn-large">
+                            ✨ Generate Emails
+                        </button>
+                    </div>
+
+                    <!-- Step 3: Confirm -->
+                    <div class="automation-step" id="step3Container" style="display: none;">
+                        <h3>Step 3: Confirm & Save</h3>
+                        <p id="step3Info" class="step-info">All emails have been generated and saved to local storage.
+                        </p>
+                        <button id="step3Btn" class="btn-primary btn-large">
+                            ✅ Confirm & Continue
+                        </button>
+                    </div>
+
+                    <!-- Step 4: Send Emails -->
+                    <div class="automation-step" id="step4Container" style="display: none;">
+                        <h3>Step 4: Send Emails</h3>
+                        <p id="step4Info" class="step-info">Ready to send emails to all clients.</p>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="sendImmediate" checked>
+                                Send immediately
+                            </label>
+                        </div>
+                        <button id="step4Btn" class="btn-primary btn-large">
+                            📧 Send Emails
+                        </button>
+                    </div>
+
+                    <!-- Reset Button -->
+                    <div class="automation-actions">
+                        <button id="resetAutomation" class="btn-secondary">
+                            🔄 Reset Automation
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Log Terminal -->
+                <div class="log-terminal">
+                    <div class="terminal-header">
+                        <h4>Live Logs</h4>
+                        <button id="clearLogs" class="btn-icon">Clear</button>
+                    </div>
+                    <div class="terminal-body" id="logTerminal">
+                        <div class="log-entry info">
+                            <span class="log-time">[00:00:00]</span>
+                            <span class="log-message">System ready. Waiting for automation to start...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Tab -->
+            <section id="settings" class="tab-content">
+                <div class="content-header">
+                    <h2>Settings</h2>
+                    <p class="subtitle">Configure your environment variables and automation parameters</p>
+                </div>
+
+                <form id="settingsForm" class="settings-form">
+                    <!-- API Keys Section -->
+                    <div class="settings-section">
+                        <h3>API Configuration</h3>
+                        <div class="form-group">
+                            <label for="GEMINI_API_KEY">Gemini API Key</label>
+                            <input type="password" id="GEMINI_API_KEY" name="GEMINI_API_KEY"
+                                placeholder="Enter your Gemini API key">
+                            <small>🔗 <a href="https://makersuite.google.com/app/apikey" target="_blank"
+                                    rel="noopener noreferrer" style="color: var(--accent-primary);">Get your Gemini API
+                                    Key here</a></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="SERPAPI_KEY">SerpAPI Key</label>
+                            <input type="password" id="SERPAPI_KEY" name="SERPAPI_KEY"
+                                placeholder="Enter your SerpAPI key">
+                            <small>🔗 <a href="https://serpapi.com/manage-api-key" target="_blank"
+                                    rel="noopener noreferrer" style="color: var(--accent-primary);">Get your SerpAPI Key
+                                    here</a></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="EMAIL_GENERATION_PROMPT">Custom Email Generation Prompt</label>
+                            <textarea id="EMAIL_GENERATION_PROMPT" name="EMAIL_GENERATION_PROMPT" rows="4"
+                                placeholder="Enter the reason/purpose for email generation (e.g., 'Offering premium web development services to help grow their business')"
+                                style="padding: 0.875rem; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-family: var(--font-primary); font-size: 1rem; resize: vertical;"></textarea>
+                            <small>This prompt will help Gemini AI understand why you're reaching out to clients</small>
+                        </div>
+                    </div>
+
+                    <!-- SMTP Configuration -->
+                    <div class="settings-section">
+                        <h3>SMTP Configuration</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="SMTP_HOST">SMTP Host</label>
+                                <input type="text" id="SMTP_HOST" name="SMTP_HOST" placeholder="smtp.gmail.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="SMTP_PORT">SMTP Port</label>
+                                <input type="number" id="SMTP_PORT" name="SMTP_PORT" placeholder="587">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="SMTP_USER">SMTP User</label>
+                                <input type="email" id="SMTP_USER" name="SMTP_USER" placeholder="your_email@gmail.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="SMTP_PASS">SMTP Password</label>
+                                <input type="password" id="SMTP_PASS" name="SMTP_PASS" placeholder="App password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="SMTP_SECURE">SMTP Secure</label>
+                            <select id="SMTP_SECURE" name="SMTP_SECURE">
+                                <option value="false">false (TLS)</option>
+                                <option value="true">true (SSL)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Business Details -->
+                    <div class="settings-section">
+                        <h3>Business Details</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="YOUR_NAME">Your Name</label>
+                                <input type="text" id="YOUR_NAME" name="YOUR_NAME" placeholder="John Doe">
+                            </div>
+                            <div class="form-group">
+                                <label for="YOUR_EMAIL">Your Email</label>
+                                <input type="email" id="YOUR_EMAIL" name="YOUR_EMAIL"
+                                    placeholder="your_email@gmail.com">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="YOUR_COMPANY">Your Company</label>
+                                <input type="text" id="YOUR_COMPANY" name="YOUR_COMPANY"
+                                    placeholder="Your Web Dev Company">
+                            </div>
+                            <div class="form-group">
+                                <label for="YOUR_WEBSITE">Your Website</label>
+                                <input type="url" id="YOUR_WEBSITE" name="YOUR_WEBSITE"
+                                    placeholder="https://yourwebsite.com">
+                                <small>🔗 <a href="https://sddev.in/tools/url-shortener" target="_blank"
+                                        rel="noopener noreferrer" style="color: var(--accent-primary);">URL Shortener &
+                                        Tracking Tool</a></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email Template -->
+                    <div class="settings-section">
+                        <h3>Email Template</h3>
+                        <div class="form-group">
+                            <label for="DEFAULT_EMAIL_SUBJECT">Default Email Subject</label>
+                            <input type="text" id="DEFAULT_EMAIL_SUBJECT" name="DEFAULT_EMAIL_SUBJECT"
+                                value="Let's grow your {business_type} together">
+                            <small>Available variables: {user_name}, {user_email}, {user_company}, {user_website},
+                                {client_email}, {business_type}, {niche}, {platform}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="DEFAULT_EMAIL_BODY">Default Email Body</label>
+                            <textarea id="DEFAULT_EMAIL_BODY" name="DEFAULT_EMAIL_BODY" rows="8"
+                                placeholder="Hi there,\n\nI came across your {business_type} on {platform} and was impressed! I'm {user_name} from {user_company}, and we specialize in helping businesses like yours grow online.\n\nWould you be interested in a quick chat about how we can help?\n\nBest regards,\n{user_name}\n{user_company}\n{user_website}"
+                                style="padding: 0.875rem; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-family: var(--font-primary); font-size: 1rem; resize: vertical;">
+Hi there,
+
+I came across your {business_type} on {platform} and was impressed! I'm {user_name} from {user_company}, and we specialize in helping businesses like yours grow online.
+
+Would you be interested in a quick chat about how we can help?
+
+Best regards,
+{user_name}
+{user_company}
+{user_website}</textarea>
+                            <small>📝 <strong>Template Variables:</strong><br>
+                                • <code>{user_name}</code> - Your name<br>
+                                • <code>{user_email}</code> - Your email address<br>
+                                • <code>{user_company}</code> - Your company name<br>
+                                • <code>{user_website}</code> - Your website URL<br>
+                                • <code>{client_email}</code> - Client's email<br>
+                                • <code>{business_type}</code> - Client's business type/niche<br>
+                                • <code>{niche}</code> - Same as business_type<br>
+                                • <code>{platform}</code> - Where the client was found</small>
+                        </div>
+                    </div>
+
+                    <!-- Search Parameters -->
+                    <div class="settings-section">
+                        <h3>Search Parameters</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="MAX_SEARCHES_PER_RUN">Max Searches Per Run</label>
+                                <input type="number" id="MAX_SEARCHES_PER_RUN" name="MAX_SEARCHES_PER_RUN"
+                                    placeholder="30">
+                            </div>
+                            <div class="form-group">
+                                <label for="RESULTS_PER_PAGE">Results Per Page</label>
+                                <input type="number" id="RESULTS_PER_PAGE" name="RESULTS_PER_PAGE" placeholder="10">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="MAX_PAGES_PER_SEARCH">Max Pages Per Search</label>
+                            <input type="number" id="MAX_PAGES_PER_SEARCH" name="MAX_PAGES_PER_SEARCH" placeholder="5">
+                        </div>
+                    </div>
+
+                    <!-- Rate Limiting -->
+                    <div class="settings-section">
+                        <h3>Rate Limiting</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="SEARCH_DELAY">Search Delay (ms)</label>
+                                <input type="number" id="SEARCH_DELAY" name="SEARCH_DELAY" placeholder="2000">
+                            </div>
+                            <div class="form-group">
+                                <label for="EMAIL_DELAY">Email Delay (ms)</label>
+                                <input type="number" id="EMAIL_DELAY" name="EMAIL_DELAY" placeholder="5000">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="MAX_EMAILS_PER_RUN">Max Emails Per Run</label>
+                            <input type="number" id="MAX_EMAILS_PER_RUN" name="MAX_EMAILS_PER_RUN" placeholder="10">
+                        </div>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button type="submit" class="btn-primary btn-large">
+                            💾 Save Settings
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <!-- Client Detail Modal -->
+    <div id="clientModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Client Details</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="client-info">
+                    <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+                    <p><strong>Niche:</strong> <span id="modalNiche"></span></p>
+                    <p><strong>Platform:</strong> <span id="modalPlatform"></span></p>
+                </div>
+                <div class="form-group">
+                    <label for="modalSubject">Email Subject</label>
+                    <input type="text" id="modalSubject" class="modal-input">
+                </div>
+                <div class="form-group">
+                    <label for="modalBody">Email Body</label>
+                    <textarea id="modalBody" class="modal-textarea" rows="10"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="modalSave" class="btn-primary">💾 Save</button>
+                <button id="modalSend" class="btn-success">📧 Send</button>
+                <button id="modalRegenerate" class="btn-secondary">✨ Regenerate</button>
+                <button id="modalClose" class="btn-secondary">✖️ Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
