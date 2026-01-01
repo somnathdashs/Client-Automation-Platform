@@ -441,9 +441,12 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-app.listen(PORT, () => {
-    originalLog(`\n🚀 Web Dashboard running at http://localhost:${PORT}\n`);
-});
+// Only start the server if this file is run directly (not imported)
+if (process.argv[1] === __filename) {
+    app.listen(PORT, () => {
+        originalLog(`\n🚀 Web Dashboard running at http://localhost:${PORT}\n`);
+    });
+}
 
 export default app;
 
