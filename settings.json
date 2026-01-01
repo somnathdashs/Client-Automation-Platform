@@ -1,0 +1,36 @@
+{
+    "gemini": {
+        "apiKey": ""
+    },
+    "serpapi": {
+        "apiKey": ""
+    },
+    "smtp": {
+        "host": "smtp.gmail.com",
+        "port": 587,
+        "secure": false,
+        "user": "",
+        "pass": ""
+    },
+    "business": {
+        "name": "",
+        "email": "",
+        "company": "",
+        "website": ""
+    },
+    "emailTemplate": {
+        "defaultSubject": "Let's grow your {business_type} together",
+        "defaultBody": "Hi there,\n\nI came across your {business_type} on {platform} and was impressed! I'm {user_name} from {user_company}, and we specialize in helping businesses like yours grow online.\n\nWould you be interested in a quick chat about how we can help?\n\nBest regards,\n{user_name}\n{user_company}\n{user_website}",
+        "generationPrompt": "Offering premium web development and digital marketing services to help grow their business online with modern solutions"
+    },
+    "search": {
+        "maxSearchesPerRun": 30,
+        "resultsPerPage": 10,
+        "maxPagesPerSearch": 5
+    },
+    "rateLimit": {
+        "searchDelay": 2000,
+        "emailDelay": 5000,
+        "maxEmailsPerRun": 10
+    }
+}

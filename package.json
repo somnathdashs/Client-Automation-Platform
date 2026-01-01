@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node src/server.js",
     "web": "node src/server.js",
     "cli": "node src/index.js",
     "test": "node src/test.js"
@@ -26,5 +26,8 @@
     "nodemailer": "^6.9.8",
     "readline-sync": "^1.4.10",
     "serpapi": "^2.2.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }

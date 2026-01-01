@@ -9,10 +9,7 @@ node_modules/
 # Database and data files
 data/
 data/*.json
-settings.json
-!package.json
 !package-lock.json
-!settings.example.json
 
 
 # Logs
