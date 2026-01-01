@@ -21,10 +21,12 @@ npm --version
 
 ### 2. Clone and Install
 ```bash
-git clone <repository-url>
-cd "Automate email for webdev"
+git clone https://github.com/somnathdashs/Client-Automation-Platform.git
+cd Client-Automation-Platform
 npm install
 ```
+
+**💡 Tip:** Want to create a desktop shortcut for one-click launching? See the **[User Guide](User-Guide.md)**!
 
 ### 3. Get API Keys
 

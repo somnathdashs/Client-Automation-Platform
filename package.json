@@ -8,7 +8,21 @@
     "start": "node src/server.js",
     "web": "node src/server.js",
     "cli": "node src/index.js",
-    "test": "node src/test.js"
+    "test": "node src/test.js",
+    "build": "node build.js",
+    "build:all": "npx pkg . --targets node18-win-x64,node18-macos-x64,node18-linux-x64 --output dist/client-automation-platform --compress GZip"
+  },
+  "bin": "launcher.js",
+  "pkg": {
+    "scripts": [
+      "src/**/*.js"
+    ],
+    "assets": [
+      "public/**/*",
+      "data/**/*",
+      "settings.json"
+    ],
+    "outputPath": "dist"
   },
   "keywords": [
     "automation",

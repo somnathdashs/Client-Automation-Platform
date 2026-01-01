@@ -34,7 +34,8 @@ Detailed documentation is available in the `wiki/` directory:
 
 1. **Clone the repository**
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/somnathdashs/Client-Automation-Platform.git
+   cd Client-Automation-Platform
    ```
 
 2. **Install dependencies**
@@ -42,25 +43,30 @@ Detailed documentation is available in the `wiki/` directory:
    npm install
    ```
 
-3. **Configure Settings**
-   Open `settings.json` and update it with your API keys:
-   ```bash
-   # Edit settings.json directly
-   ```
-
-4. **Start the application**
+3. **Start the Application**
+   
+   **Option A: One-Click Start (Recommended)**
+   - Double-click the `start_app.bat` file in the project folder.
+   - This will automatically start the server and open your browser!
+   
+   **Option B: Manual Start**
    ```bash
    npm run web
    ```
    Access the dashboard at `http://localhost:3000`.
 
----
+4. **Create a Desktop Shortcut (Optional)**
+   - Right-click `start_app.bat`
+   - Select **Send to** → **Desktop (create shortcut)**
+   - Now you can launch the app directly from your desktop!
 
-## 🚢 Deployment
+5. **Configure Settings**
+   - Open your browser to `http://localhost:3000`
+   - Navigate to the **Settings** tab
+   - Enter your API keys and business information
+   - Click **Save Settings**
 
-See [**Deployment Guide**](wiki/Deployment.md) for more details.
 
----
 
 ## 🛠️ Project Structure
 
